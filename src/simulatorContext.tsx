@@ -26,6 +26,7 @@ type SimulatorContextType = {
     simulate: () => void;
     setValue: (id: string, value: boolean) => void;
     reset: () => void;
+    deleteNode: (id: string) => void;
 };
 
 const SimulatorContext = createContext<SimulatorContextType | undefined>(undefined);
@@ -162,8 +163,13 @@ export const SimulatorProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         update();
     }
 
+    const deleteNode = (id: string) => {
+        graphRef.current.deleteNode(id);
+        update();
+    }
+
     return (
-        <SimulatorContext.Provider value={{ nodes, edges, simulate, onNodesChange, onEdgesChange, addNode, addEdge, setValue, reset }}>
+        <SimulatorContext.Provider value={{ nodes, edges, simulate, onNodesChange, onEdgesChange, addNode, addEdge, setValue, reset, deleteNode }}>
             {children}
         </SimulatorContext.Provider>
     );
