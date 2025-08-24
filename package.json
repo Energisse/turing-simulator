@@ -1,7 +1,7 @@
 {
   "name": "turing-simulator",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "module",
   "description": "A Turing machine simulator built with React and Vite.",
   "author": "Energisse(HALVICK Thomas)",
@@ -16,11 +16,13 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
+    "@mui/icons-material": "^7.3.1",
     "@mui/material": "^7.3.1",
     "@xyflow/react": "^12.8.4",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
-    "reactflow": "^11.11.4"
+    "reactflow": "^11.11.4",
+    "reflect-metadata": "^0.2.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.33.0",

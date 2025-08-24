@@ -1,3 +1,4 @@
+import { SerializableClass } from "../decorators/serializable";
 import Positionned from "../positionned";
 import BaseGate from "./baseGate";
 import type BaseGateInterface from "./baseGateInterface";
@@ -6,11 +7,11 @@ import type BaseGateInterface from "./baseGateInterface";
  * Wrapper class that adds a position to any gate.
  * Delegates all gate operations to the inner BaseGate.
  */
+@SerializableClass()
 export class PositionnedGate extends Positionned<BaseGate> implements BaseGateInterface {
 
     constructor(gate: BaseGate, position: { x: number; y: number }) {
         super(gate, position.x, position.y);
-        this.position = position;
     }
 
     /** Reset the gate */

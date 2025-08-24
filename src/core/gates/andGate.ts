@@ -1,8 +1,10 @@
+import { SerializableClass } from "../decorators/serializable";
 import BaseGate from "./baseGate";
 
 /**
  * Concrete AND gate with 2 inputs and 1 output.
  */
+@SerializableClass()
 export default class AndGate extends BaseGate {
 
     /**

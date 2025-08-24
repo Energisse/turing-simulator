@@ -1,3 +1,4 @@
+import { SerializableClass } from "../decorators/serializable";
 import BaseElement from "../baseElement";
 import type InputInterface from "./inputInterface";
 
@@ -5,6 +6,7 @@ import type InputInterface from "./inputInterface";
  * Represents an input node in the circuit.
  * Outputs its initial value, which can be updated with setValue().
  */
+@SerializableClass()
 export default class BaseInput extends BaseElement implements InputInterface {
 
     /**

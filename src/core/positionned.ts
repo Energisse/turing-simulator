@@ -1,14 +1,21 @@
-import type BaseElementInterface from "./baseElementInterface";
+import { SerializableProperty } from "./decorators/serializable";
+import BaseElementInterface from "./baseElementInterface";
 
 /**
  * Wrapper class that adds a position (x, y) to any element.
  * Delegates all BaseElementInterface methods to the wrapped element.
  */
-export default abstract class Positionned<T extends BaseElementInterface = BaseElementInterface> implements BaseElementInterface {
-    // Position of the element in 2D space
-    protected position: { x: number; y: number };
+export default abstract class Positionned<T extends BaseElementInterface = BaseElementInterface> extends BaseElementInterface {
+    // X-coordinate of the element
+    @SerializableProperty()
+    protected x: number;
+
+    // Y-coordinate of the element
+    @SerializableProperty()
+    protected y: number;
 
     // The actual element being wrapped
+    @SerializableProperty()
     protected element: T;
 
     /**
@@ -17,7 +24,9 @@ export default abstract class Positionned<T extends BaseElementInterface = BaseE
      * @param y initial y-coordinate
      */
     constructor(element: T, x: number, y: number) {
-        this.position = { x, y };
+        super();
+        this.x = x;
+        this.y = y;
         this.element = element;
     }
 
@@ -43,12 +52,13 @@ export default abstract class Positionned<T extends BaseElementInterface = BaseE
 
     /** Return the current position */
     getPosition(): { x: number; y: number } {
-        return this.position;
+        return { x: this.x, y: this.y };
     }
 
     /** Update the position */
     setPosition(x: number, y: number): void {
-        this.position = { x, y };
+        this.x = x;
+        this.y = y;
     }
 
     /** Return the number of inputs expected by the wrapped element */

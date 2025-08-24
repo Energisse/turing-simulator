@@ -1,9 +1,11 @@
+import { SerializableClass } from "../decorators/serializable";
 import BaseGate from "./baseGate";
 
 /**
  * Concrete NOT gate with 1 input and 1 output.
  * Output is the negation of the input.
  */
+@SerializableClass()
 export default class NotGate extends BaseGate {
 
     constructor(id: string) {

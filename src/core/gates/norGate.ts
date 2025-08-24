@@ -1,9 +1,11 @@
+import { SerializableClass } from "../decorators/serializable";
 import BaseGate from "./baseGate";
 
 /**
  * Concrete NOR gate with 2 inputs and 1 output.
  * Output is the negation of the OR of its inputs.
  */
+@SerializableClass()
 export default class NorGate extends BaseGate {
 
     constructor(id: string) {

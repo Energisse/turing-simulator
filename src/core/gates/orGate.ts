@@ -1,10 +1,12 @@
-// OrGate.ts
+import { SerializableClass } from "../decorators/serializable";
 import BaseGate from "./baseGate";
 
 /**
  * Concrete OR gate with 2 inputs and 1 output.
  * Output is true if either input is true.
  */
+
+@SerializableClass()
 export default class OrGate extends BaseGate {
 
     constructor(id: string) {

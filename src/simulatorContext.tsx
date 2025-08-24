@@ -14,6 +14,7 @@ import OrGate from "./core/gates/orGate";
 import NorGate from "./core/gates/norGate";
 import XorGate from "./core/gates/xorGate";
 import AndGate from "./core/gates/andGate";
+import { deserialize, serialize } from "./core/decorators/serializable";
 
 type SimulatorContextType = {
     nodes: ReturnType<typeof useNodesState>[0];
@@ -24,7 +25,7 @@ type SimulatorContextType = {
     onEdgesChange: ReturnType<typeof useEdgesState>[2];
     simulate: () => void;
     setValue: (id: string, value: boolean) => void;
-
+    reset: () => void;
 };
 
 const SimulatorContext = createContext<SimulatorContextType | undefined>(undefined);
@@ -43,7 +44,12 @@ export const SimulatorProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     const [nodes, setNodes, _onNodesChange] = useNodesState([]);
     const [edges, setEdges, _onEdgesChange] = useEdgesState([]);
 
-    const graphRef = useRef(new Graph<Positionned>());
+    const graphRef = useRef<Graph<Positionned>>(deserialize(Graph<Positionned>, JSON.parse(localStorage.getItem("myGraph")!)) || new Graph<Positionned>());
+
+    useEffect(() => {
+        update();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     const simulate = () => {
         graphRef.current.simulate();
@@ -114,6 +120,8 @@ export const SimulatorProvider: React.FC<{ children: React.ReactNode }> = ({ chi
                 inputsValue: node.getInputs()
             }
         })));
+
+        localStorage.setItem("myGraph", JSON.stringify(serialize(graphRef.current)));
     }
 
     useEffect(() => {
@@ -156,8 +164,13 @@ export const SimulatorProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         _onEdgesChange(changes);
     }
 
+    const reset = () => {
+        graphRef.current = new Graph();
+        update();
+    }
+
     return (
-        <SimulatorContext.Provider value={{ nodes, edges, simulate, onNodesChange, onEdgesChange, addNode, addEdge, setValue }}>
+        <SimulatorContext.Provider value={{ nodes, edges, simulate, onNodesChange, onEdgesChange, addNode, addEdge, setValue, reset }}>
             {children}
         </SimulatorContext.Provider>
     );

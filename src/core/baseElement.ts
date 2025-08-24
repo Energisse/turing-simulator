@@ -1,26 +1,32 @@
-import type BaseElementInterface from "./baseElementInterface";
-
+import { SerializableProperty } from "./decorators/serializable";
+import BaseElementInterface from "./baseElementInterface";
 /**
  * Base class for all circuit/logic elements.
  * Implements the common interface for all elements (logic gates, inputs, outputs, etc.)
  */
-export default abstract class BaseElement implements BaseElementInterface {
+export default abstract class BaseElement extends BaseElementInterface {
     // Unique identifier of the node in the graph
+    @SerializableProperty()
     private id: string;
 
     // Array of input values (e.g., for a logic gate with multiple inputs)
+    @SerializableProperty()
     protected inputs: boolean[] = [];
 
     // Array of output values (e.g., for a logic gate with multiple outputs)
+    @SerializableProperty()
     protected outputs: boolean[] = [];
 
     // Type of the element (e.g., "AND", "OR", "INPUT", "OUTPUT", etc.)
+    @SerializableProperty()
     private type: string;
 
     // Expected number of inputs for this element
+    @SerializableProperty()
     private inputsNumber: number;
 
     // Expected number of outputs for this element
+    @SerializableProperty()
     private outputsNumber: number;
 
     /**
@@ -30,6 +36,7 @@ export default abstract class BaseElement implements BaseElementInterface {
      * @param outputsNumber number of expected outputs
      */
     constructor(id: string, type: string, inputsNumber: number, outputsNumber: number) {
+        super();
         this.id = id;
         this.type = type;
         this.inputsNumber = inputsNumber;

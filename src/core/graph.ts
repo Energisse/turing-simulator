@@ -1,29 +1,26 @@
 import type BaseElementInterface from "./baseElementInterface";
+import { SerializableProperty, SerializableClass } from "./decorators/serializable";
+import Edge from "./edge";
 import BaseGate from "./gates/baseGate";
 import BaseInput from "./inputs/baseInput";
-
-/** Represents a connection between two nodes, including which output/input handles it connects */
-export type Edge = {
-    source: string,
-    target: string;
-    sourceHandle: number;
-    targetHandle: number
-};
 
 /**
  * Generic Graph class to manage nodes (elements) and edges (connections)
  * Supports simulation starting from output nodes and recursively computing dependencies.
  */
-export default class Graph<T extends BaseElementInterface> {
-    // Map of nodes by their unique ID
-    private nodes: Map<string, T> = new Map();
+@SerializableClass()
+export default class Graph<T extends BaseElementInterface = BaseElementInterface> {
+    // List of nodes in the graph
+    @SerializableProperty()
+    private nodes: Array<T> = [];
 
     // List of edges connecting nodes
+    @SerializableProperty()
     private edges: Array<Edge> = [];
 
     /** Add a new node to the graph */
     addNode(node: T) {
-        this.nodes.set(node.getId(), node);
+        this.nodes.push(node);
     }
 
     /** Add an edge between nodes, avoiding duplicates */
@@ -36,12 +33,12 @@ export default class Graph<T extends BaseElementInterface> {
         )) {
             return;
         }
-        this.edges.push({ source, target, sourceHandle, targetHandle });
+        this.edges.push(new Edge(source, target, sourceHandle, targetHandle));
     }
 
     /** Remove a node and all connected edges */
     deleteNode(id: string) {
-        this.nodes.delete(id);
+        this.nodes = this.nodes.filter(node => node.getId() !== id);
         this.edges = this.edges.filter(edge => edge.source !== id && edge.target !== id);
     }
 
@@ -57,12 +54,12 @@ export default class Graph<T extends BaseElementInterface> {
 
     /** Get a node by its ID */
     getNode(id: string) {
-        return this.nodes.get(id);
+        return this.nodes.find(node => node.getId() === id);
     }
 
     /** Return all nodes as an array */
     getNodes() {
-        return Array.from(this.nodes.values());
+        return this.nodes;
     }
 
     /** Return outgoing edges for a given node (neighbors) */

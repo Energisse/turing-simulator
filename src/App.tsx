@@ -1,15 +1,15 @@
 import ReactFlow, { Background, useReactFlow } from 'reactflow';
 import './App.css'
 import { useCallback } from 'react';
-import { Box } from '@mui/material';
+import { Box, Fab } from '@mui/material';
 import { Sidebar } from './sidebar';
 import { useDnD } from './DnDContext';
 import { nodes as customNodeTypes } from './ui/components/nodes/nodes';
 import { useSimulatorContext } from './simulatorContext';
-
+import DeleteIcon from '@mui/icons-material/Delete';
 
 function App() {
-  const { nodes, edges, addEdge, addNode, onEdgesChange, onNodesChange } = useSimulatorContext();
+  const { nodes, edges, addEdge, addNode, onEdgesChange, onNodesChange, reset } = useSimulatorContext();
 
   const { screenToFlowPosition } = useReactFlow();
   const [type] = useDnD();
@@ -72,6 +72,9 @@ function App() {
       >
         <Background gap={20} />
       </ReactFlow>
+      <Fab color="error" size='small' aria-label="reset" onClick={reset} sx={{ position: 'absolute', bottom: 16, right: 16 }}>
+        <DeleteIcon />
+      </Fab>
     </Box>
 
   );
