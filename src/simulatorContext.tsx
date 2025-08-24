@@ -120,17 +120,10 @@ export const SimulatorProvider: React.FC<{ children: React.ReactNode }> = ({ chi
                 inputsValue: node.getInputs()
             }
         })));
-
-        localStorage.setItem("myGraph", JSON.stringify(serialize(graphRef.current)));
     }
 
     useEffect(() => {
-
-        edges.forEach(edge => {
-            if (edge.source && edge.target && edge.sourceHandle && edge.targetHandle) {
-                graphRef.current.addEdge(edge.source, edge.target, +edge.sourceHandle.split("#")[1], +edge.targetHandle.split("#")[1]);
-            }
-        });
+        localStorage.setItem("myGraph", JSON.stringify(serialize(graphRef.current)));
     }, [edges, nodes]);
 
 
