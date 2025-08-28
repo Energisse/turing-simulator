@@ -41,6 +41,7 @@ export default abstract class BaseElement extends BaseElementInterface {
         this.type = type;
         this.inputsNumber = inputsNumber;
         this.outputsNumber = outputsNumber;
+        this.reset();
     }
 
     /**
@@ -79,5 +80,13 @@ export default abstract class BaseElement extends BaseElementInterface {
     /** Returns the expected number of outputs for this element */
     getOutputsNumber(): number {
         return this.outputsNumber;
+    }
+
+    /**
+     * Resets the gate by clearing all inputs and outputs
+     */
+    reset() {
+        this.inputs = Array.from({ length: this.inputsNumber }, () => false);
+        this.outputs = Array.from({ length: this.outputsNumber }, () => false);
     }
 }

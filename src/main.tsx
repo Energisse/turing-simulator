@@ -9,13 +9,11 @@ import { SimulatorProvider } from './simulatorContext.tsx';
 
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <ReactFlowProvider>
-      <DnDProvider>
-        <SimulatorProvider>
-          <App />
-        </SimulatorProvider>
-      </DnDProvider>
-    </ReactFlowProvider>
-  </StrictMode>,
+  <ReactFlowProvider>
+    <DnDProvider>
+      <SimulatorProvider>
+        <App />
+      </SimulatorProvider>
+    </DnDProvider>
+  </ReactFlowProvider>
 )

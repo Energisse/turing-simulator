@@ -115,6 +115,7 @@ export default class Graph<T extends BaseElementInterface = BaseElementInterface
                     this.evaluateNode(sourceNode); // recursive call
                     // Pass the output value of the source node as input to this node
                     const value = sourceNode.getOutputs()[edge.sourceHandle];
+                    edge.setValue(value);
                     node.setInput(edge.targetHandle, value);
                 }
             }

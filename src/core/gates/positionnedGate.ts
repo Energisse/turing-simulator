@@ -8,7 +8,7 @@ import type BaseGateInterface from "./baseGateInterface";
  * Delegates all gate operations to the inner BaseGate.
  */
 @SerializableClass()
-export class PositionnedGate extends Positionned<BaseGate> implements BaseGateInterface {
+export default class PositionnedGate extends Positionned<BaseGate> implements BaseGateInterface {
 
     constructor(gate: BaseGate, position: { x: number; y: number }) {
         super(gate, position.x, position.y);

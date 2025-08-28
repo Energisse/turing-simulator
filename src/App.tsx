@@ -8,6 +8,7 @@ import { nodes as customNodeTypes } from './ui/components/nodes/nodes';
 import { useSimulatorContext } from './simulatorContext';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import CurrentEdge from './ui/components/edges/edge';
 
 function App() {
   const { nodes, edges, addEdge, addNode, onEdgesChange, onNodesChange, reset, deleteNode } = useSimulatorContext();
@@ -148,11 +149,10 @@ function App() {
   const enhancedEdges = useMemo(() => {
     return edges.map(edge => ({
       ...edge,
-      selected: edge.id === selectedEdge,
-      style: {
-        stroke: edge.id === selectedEdge ? '#1976d2' : '#b1b1b7', // blue for selected
-        strokeWidth: edge.id === selectedEdge ? 3 : 2,
-      },
+      data: {
+        ...edge.data,
+        selected: edge.id === selectedEdge,
+      }
     }));
   }, [edges, selectedEdge]);
 
@@ -178,6 +178,9 @@ function App() {
         nodeTypes={customNodeTypes}
         nodes={nodes}
         edges={enhancedEdges}
+        edgeTypes={{
+          current: CurrentEdge
+        }}
         onConnect={addEdge}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
@@ -188,7 +191,6 @@ function App() {
         onNodeDrag={onNodeDrag}
         onEdgeClick={onEdgeClick}
         onPaneClick={onPaneClick}
-        defaultEdgeOptions={{ type: 'smoothstep' }}
         snapToGrid={true}
         snapGrid={[20, 20]}
         fitView

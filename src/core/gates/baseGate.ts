@@ -29,11 +29,8 @@ export default abstract class BaseGate extends BaseElement implements BaseGateIn
         this.outputs = Array.isArray(result) ? result : [result];
     }
 
-    /**
-     * Resets the gate by clearing all inputs and outputs
-     */
-    reset() {
-        this.outputs = [];
-        this.inputs = [];
+    reset(): void {
+        super.reset();
+        this.compute();
     }
 }

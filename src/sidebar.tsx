@@ -85,14 +85,13 @@ export const Sidebar = () => {
                             zIndex={0}
                             dragging={false}
                             isConnectable={true}
-                            xPos={0}
-                            yPos={0}
+                            positionAbsoluteX={0}
+                            positionAbsoluteY={0}
                             data={{
                                 inputsValue: [],
                                 outputsValue: [],
                             }}
-                            isPreview={true}
-                        />
+                            isPreview={true} draggable={false} selectable={false} deletable={false} />
                     </Grid>
                 ))
             }

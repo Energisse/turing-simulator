@@ -15,6 +15,9 @@ export default class Edge {
     // The handle index on the target node.
     @SerializableProperty()
     readonly targetHandle: number;
+    // The current value of the edge.
+    @SerializableProperty()
+    private _value: boolean = false;
 
     /**
      * Creates a new Edge instance.
@@ -28,5 +31,21 @@ export default class Edge {
         this.target = target;
         this.sourceHandle = sourceHandle;
         this.targetHandle = targetHandle;
+    }
+
+    /**
+     * Updates the value of the edge.
+     * @param newValue - The new value to set.
+     */
+    setValue(newValue: boolean) {
+        this._value = newValue;
+    }
+
+    /**
+     * Gets the current value of the edge.
+     * @returns The current value.
+     */
+    getValue(): boolean {
+        return this._value;
     }
 }
