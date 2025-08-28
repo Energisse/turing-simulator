@@ -1,4 +1,4 @@
-import { Handle } from "reactflow";
+import { Handle } from "@xyflow/react";
 
 export type CustomHandleProps = React.ComponentProps<typeof Handle> & {
     isPreview?: boolean;

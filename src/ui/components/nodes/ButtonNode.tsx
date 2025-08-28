@@ -1,4 +1,4 @@
-import { Position } from "reactflow";
+import { Position } from "@xyflow/react";
 import { CustomHandle } from "../CustomHandle";
 import { useSimulatorContext } from "../../../simulatorContext";
 import type { BaseGateNodeProps } from "./gates/BaseGateNode";

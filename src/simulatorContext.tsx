@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useRef, useEffect } from "react";
-import { useNodesState, useEdgesState, type Connection, type NodeChange, type EdgeChange } from "reactflow";
+import { useNodesState, useEdgesState, type Connection, type NodeChange, type EdgeChange, type Node, type Edge } from "@xyflow/react";
 import NandGate from "./core/gates/nandGate";
 import BaseGate from "./core/gates/baseGate";
 import Graph from "./core/graph";
@@ -42,8 +42,8 @@ const gatesMap: Record<string, new (id: string) => BaseElement> = {
 };
 
 export const SimulatorProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [nodes, setNodes, _onNodesChange] = useNodesState([]);
-    const [edges, setEdges, _onEdgesChange] = useEdgesState([]);
+    const [nodes, setNodes, _onNodesChange] = useNodesState<Node>([]);
+    const [edges, setEdges, _onEdgesChange] = useEdgesState<Edge>([]);
 
     const graphRef = useRef<Graph<Positionned>>(deserialize(Graph<Positionned>, JSON.parse(localStorage.getItem("myGraph")!)) || new Graph<Positionned>());
 

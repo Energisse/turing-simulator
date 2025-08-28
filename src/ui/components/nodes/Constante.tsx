@@ -1,4 +1,4 @@
-import { Position } from "reactflow";
+import { Position } from "@xyflow/react";
 import { CustomHandle } from "../CustomHandle";
 import { useState } from "react";
 

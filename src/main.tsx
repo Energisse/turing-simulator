@@ -4,7 +4,7 @@ import './index.css'
 import '@xyflow/react/dist/style.css';
 import App from './App.tsx'
 import { DnDProvider } from './DnDContext.tsx';
-import { ReactFlowProvider } from 'reactflow';
+import { ReactFlowProvider } from '@xyflow/react';
 import { SimulatorProvider } from './simulatorContext.tsx';
 
 

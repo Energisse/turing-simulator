@@ -1,19 +1,20 @@
-import { Position, type NodeProps } from "reactflow";
+import { Position, type NodeProps, type Node } from "@xyflow/react";
 import { CustomHandle } from "../../CustomHandle";
 import { Typography } from "@mui/material";
 import type { JSX } from "react";
 
 export type BaseGateNodeProps =
-    NodeProps<
+    NodeProps<Node<
         {
             inputsValue: boolean[];
             outputsValue: boolean[];
-        }> & {
-            name: string;
-            inputs: number;
-            svg: JSX.Element;
-            isPreview?: boolean;
         }
+    >> & {
+        name: string;
+        inputs: number;
+        svg: JSX.Element;
+        isPreview?: boolean;
+    }
 
 export const BaseGateNode = ({ data: { inputsValue, outputsValue }, name, inputs, svg, isPreview }: BaseGateNodeProps) => (
     <div style={{ width: 80, height: 60, position: "relative" }}>

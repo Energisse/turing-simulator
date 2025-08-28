@@ -1,4 +1,4 @@
-import ReactFlow, { Background, useReactFlow } from 'reactflow';
+import { Background, MiniMap, ReactFlow, useReactFlow } from '@xyflow/react';
 import './App.css'
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { Box, Fab } from '@mui/material';
@@ -160,6 +160,7 @@ function App() {
     <Box
       width={'100%'}
       height={'100%'}
+      position={"relative"}
     >
       <Box sx={{
         zIndex: 99,
@@ -188,17 +189,17 @@ function App() {
         onEdgeClick={onEdgeClick}
         onPaneClick={onPaneClick}
         defaultEdgeOptions={{ type: 'smoothstep' }}
-        className="touch-flow"
         snapToGrid={true}
         snapGrid={[20, 20]}
         fitView
+        maxZoom={4}
       >
+        <MiniMap zoomable pannable />
         <Background gap={20} />
       </ReactFlow>
       <Fab color="error" size='small' aria-label="reset" onClick={reset} sx={{ position: 'absolute', bottom: 16, right: 16 }}>
         <DeleteIcon />
       </Fab>
-
       {/* Delete FAB that appears during actual drag or when edge is selected */}
       {(isActuallyDragging || selectedEdge) && (
         <Box
@@ -231,7 +232,6 @@ function App() {
 
       )}
     </Box>
-
   );
 }
 
