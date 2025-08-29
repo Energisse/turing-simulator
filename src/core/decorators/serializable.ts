@@ -8,7 +8,19 @@ const metadataKey = Symbol("serializableProperties");
 /**
  * Registry of all serializable classes by their class name.
  */
-const classRegistry = new Map<string, unknown>();
+// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+const classRegistry = new Map<string, Function>();
+
+/**
+ * Type of a mixin class constructor
+ */
+type MixinClass<T = unknown> = { new(...args: unknown[]): T; mixin?: { target: string; source: string } };
+
+
+/**
+ * Registry of all mixins by their class name.
+ */
+const mixinRegistry = new Map<string, (...args: unknown[]) => MixinClass>();
 
 /**
  * Metadata information for a serializable property.
@@ -45,19 +57,24 @@ export function SerializableProperty(key?: string): PropertyDecorator {
     };
 }
 
+
 /**
  * Recursively serializes a value.
  * - Arrays are serialized element-wise
  * - Objects are serialized including a `__class` property
  * - Primitives are returned as-is
- * @param value The value to serialize
- * @returns Serialized value
  */
 function serializeValue(value: unknown): unknown {
     if (Array.isArray(value)) {
         return value.map(serializeValue);
     } else if (value && typeof value === "object") {
-        return { __class: (value as object).constructor.name, ...serialize(value as object) };
+        const obj = value as Record<string, unknown>;
+        const constructor = obj.constructor as MixinClass;
+        return {
+            __class: constructor.name,
+            ...(constructor.mixin ? { __mixin: constructor.mixin } : {}),
+            ...serialize(obj)
+        };
     }
     return value;
 }
@@ -117,19 +134,28 @@ export function SerializableClass(name?: string): ClassDecorator {
     return function (constructor) {
         const className = name || constructor.name;
         classRegistry.set(className, constructor);
+    };
+}
 
-        const originalExtend = Object.getPrototypeOf(constructor);
-        Object.setPrototypeOf(constructor, new Proxy(originalExtend, {
-            construct(target, args, newTarget) {
-                const instance = Reflect.construct(target, args, newTarget);
-
-                if (!classRegistry.has(newTarget.name)) {
-                    classRegistry.set(newTarget.name, newTarget);
-                }
-
-                return instance;
+/**
+ * Mixin decorator to mark a method as a mixin.
+ * Registers the method in the mixin registry.
+ * A mixin is a class that provides methods that can be used by other classes.
+ * It will add the mixin to the target class.
+ * @returns Method decorator function
+ */
+export function SerializableMixin(): MethodDecorator {
+    return function (_: unknown, propertyKey: string | symbol, descriptor: PropertyDescriptor) {
+        const originalMethod = descriptor.value;
+        descriptor.value = (...arg: unknown[]) => {
+            const mixinClass = originalMethod(...arg);
+            mixinClass["mixin"] = {
+                "target": (typeof arg[0] === "function" && "name" in arg[0]) ? (arg[0] as { name: string }).name : undefined,
+                "source": propertyKey.toString()
             }
-        }));
+            return mixinClass;
+        }
+        mixinRegistry.set(propertyKey.toString(), descriptor.value);
     };
 }
 
@@ -145,10 +171,24 @@ export function deserializeValue(value: unknown): unknown {
     if (value && typeof value === "object") {
         const obj = value as Record<string, unknown>;
 
+        if ("__mixin" in obj && obj.__mixin && typeof obj.__mixin === "object") {
+            if (!("target" in obj.__mixin) || !obj.__mixin.target) return;
+            if (!("source" in obj.__mixin) || !obj.__mixin.source) return;
+
+            const cls = classRegistry.get(obj.__mixin.target.toString());
+            const mixin = mixinRegistry.get(obj.__mixin.source.toString());
+
+            if (!cls || !mixin) return;
+
+            return deserialize(mixin(cls), obj);
+        }
+
         if ("__class" in obj && typeof obj.__class === "string" && classRegistry.has(obj.__class)) {
             const cls = classRegistry.get(obj.__class) as Constructor;
             return deserialize(cls, obj);
         }
+
+
 
         if (Array.isArray(value)) {
             return value.map(deserializeValue);

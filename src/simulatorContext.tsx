@@ -18,13 +18,10 @@ import NorGate from "./core/gates/norGate";
 import XorGate from "./core/gates/xorGate";
 import AndGate from "./core/gates/andGate";
 import Button from "./core/inputs/button";
-import BaseGate from "./core/gates/baseGate";
-import BaseInput from "./core/inputs/baseInput";
-import PositionnedGate from "./core/gates/positionnedGate";
-import PositionnedInput from "./core/inputs/posionnedInput";
 import { deserialize, serialize } from "./core/decorators/serializable";
 import type BaseElement from "./core/baseElement";
-import type Positionned from "./core/positionned";
+import { Mixin, type PositionableInterface } from "./core/positionable";
+import BaseInput from "./core/inputs/baseInput";
 
 // -------------------------------
 // Type Definitions
@@ -69,8 +66,8 @@ export const SimulatorProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     const [edges, setEdges, _onEdgesChange] = useEdgesState<Edge>([]);
 
     // Graph instance stored in a ref (persistent across renders)
-    const graphRef = useRef<Graph<Positionned>>(
-        deserialize(Graph<Positionned>, JSON.parse(localStorage.getItem("myGraph") || "null")) || new Graph<Positionned>()
+    const graphRef = useRef<Graph<BaseElement & PositionableInterface>>(
+        deserialize(Graph<BaseElement & PositionableInterface>, JSON.parse(localStorage.getItem("myGraph") || "null")) || new Graph<BaseElement & PositionableInterface>()
     );
 
     useEffect(() => {
@@ -89,21 +86,12 @@ export const SimulatorProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     // Add a node to the graph
     // -------------------------------
     const addNode = (type: string, position: { x: number; y: number }) => {
-        const GateClass = gatesMap[type];
+        const GateClass = Mixin.Positionable(gatesMap[type]);
         if (!GateClass) return;
 
-        const gate = new GateClass(Date.now().toString());
-        let newGate: Positionned;
+        const gate = new GateClass(position.x, position.y, Date.now().toString());
 
-        if (gate instanceof BaseGate) {
-            newGate = new PositionnedGate(gate, position);
-        } else if (gate instanceof BaseInput) {
-            newGate = new PositionnedInput(gate, position.x, position.y);
-        } else {
-            return;
-        }
-
-        graphRef.current.addNode(newGate);
+        graphRef.current.addNode(gate);
         update();
     };
 
@@ -128,7 +116,7 @@ export const SimulatorProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     // -------------------------------
     const setValue = (id: string, value: boolean) => {
         const node = graphRef.current.getNode(id);
-        if (node instanceof PositionnedInput) {
+        if (node instanceof BaseInput) {
             node.setValue(value);
         }
         update();
